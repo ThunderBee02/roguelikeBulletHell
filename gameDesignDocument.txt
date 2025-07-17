@@ -1,0 +1,51 @@
+-4:3 Aspect Ratio
+-gleichförmige Bewegung
+-verschiedene Gegner, mal beweglich mal nicht
+-Bildschirm verlassen heißt ausgeschaltet
+-Dinge zum Ausweichen
+-keine Impulserhaltung
+-Spieler wird auf Rechteck am unteren Rand begrenzt
+-Hintergrund bewegt sich permanent nach unten
+
+Gegner Movement und Spawn Patterns:
+	Auf jeden Fall:
+	1. festes Movement zwischen 2 Punkten [zwei Punkte, Geschwindigkeit]
+	2. auf Spieler zubewegen [Spawnpunkt, Spielerposition, Geschwindigkeit]
+	3. mit dem Spielfeld [Spawnpunkt]
+	4. random Movement zwischen 2 Punkten [zwei Punkte, Geschwindigkeit]
+	common: Punkt, Geschwindigkeit
+
+	Hinterkopf:
+	-mehr als 2 Punkte bei 1. und 4.
+
+
+Waffen:
+	offensiv: [update]
+	-untargeted []
+	-targeted []
+	-homing destroyable [Zielposition]
+	-homing dodgeable [Zielposition]
+	-Laser untargeted/targeted []
+	-mehr Gegner spawnen 
+	shoot: Spawnpunkt, Zielpunkt
+	update: deltaTime
+
+	defensiv:
+	-aktivierbares Schild
+	-Schild alle paar Sekunden
+	-orbiting Schilder
+	-anti-Projektil Waffe, non-homing
+	update: deltaTime, Spawnpunkt, Zielpunkt, 
+
+
+
+Aktuelle Ideen:
+-Lokale Koordinaten der Waffe bei Kreation festlegen, mithilfe von aktuellen Globalen Koordinaten und Drehung Spawnpunkt der Projektile ausrechnen
+
+-Überklasse für alles was anvisiert werden kann, mit einfacher Positionsabfrage
+-Gruppe der möglichen Ziele bei Waffenkreation übergeben
+-"Globale" Liste aller Projektile um dies möglich zu machen
+-Homing Projektile referenzieren diese Listen ebenfalls
+-Waffen spawnen Projektile aber Projektile werden von Game geupdated
+-Waffenupdate benötigt also lediglich Zeit und Position der Schützen, Zielberechnung passiert über Liste möglicher Ziele
+-Kollision?
