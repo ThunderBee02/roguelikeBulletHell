@@ -1,44 +1,40 @@
 #include "Weapon.h"
 #include "Game.h"
+#include <iostream>
 
-extern Game game;
 
-Weapon::Weapon(float recoveryTime, int damage)
-	: recoveryTime(recoveryTime), timeSinceShot(0.f), damage(damage)
+
+Weapon::Weapon(int damage, float recoveryTime, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles)
+	: damage(damage), recoveryTime(recoveryTime), localPosition(localPosition), projectiles(projectiles)
 {
 }
 
-void Weapon::draw(RenderTarget& target, RenderStates states) const
-{
-	for (const Projectile& projectile : projectiles)
-	{
-		target.draw(projectile, states);
-	}
-}
 
-
-
-linearWeapon::linearWeapon(float recoveryTime, int damage, float projectileSpeed)
-	: Weapon(recoveryTime, damage), projectileSpeed(projectileSpeed)
+TargetedWeapon::TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles, vector<unique_ptr<Entity>>& targets)
+	: Weapon(damage, recoveryTime, localPosition, projectiles), projectileSpeed(projectileSpeed), targets(targets)
 {
 }
 
-void linearWeapon::update(float deltaTime, Vector2f origin, Vector2f target)
+void TargetedWeapon::update(float deltaTime, Vector2f origin, Angle angle)
 {
 	timeSinceShot += deltaTime;
 	if (timeSinceShot >= recoveryTime)
 	{
 		timeSinceShot = 0.f;
-		projectiles.emplace_back(10.f, origin, (target - origin).normalized());
+		Vector2f position(origin + localPosition.rotatedBy(angle));
+		Vector2f closestTarget(600.f, -1000.f);
+		float smallestDistance = 10000.f;
+		for (const unique_ptr<Entity>& target : targets)
+		{
+			Vector2f targetPosition = target->getCenter();
+			float distance = (targetPosition - position).length();
+			if (distance <= smallestDistance)
+			{
+				closestTarget = targetPosition;
+				smallestDistance = distance;
+			}
+		}
+		projectiles.push_back(make_unique<LinearProjectile>(damage, projectileSpeed, position, closestTarget-position));
 	}
-
-	for (Projectile& projectile : projectiles)
-	{
-		projectile.move(projectile.direction * projectileSpeed * deltaTime);
-	}
-
-	projectiles.erase(remove_if(projectiles.begin(), projectiles.end(),
-		[](Projectile& projectile) {
-			return projectile.cull();
-		}), projectiles.end());
+	
 }

@@ -1,15 +1,12 @@
 #pragma once
 #include "Help.h"
+#include "Entity.h"
 #include "MovementPattern.h"
 #include "Weapon.h"
-#include "Player.h"
 
-class Enemy : public Drawable
+class Enemy : public Entity
 {
-protected:
-	Texture texture;
-	CircleShape circle;
-
+private:
 	unique_ptr<MovementPattern> movementPattern;
 	vector<unique_ptr<Weapon>> weapons;
 
@@ -18,7 +15,6 @@ protected:
 public:
 	Enemy(int health, Vector2f spawnPoint, unique_ptr<MovementPattern>& movementPattern, vector<unique_ptr<Weapon>>& weapons);
 
-	void update(float deltaTime, Player& player);
+	void update(float deltaTime);
 
-	virtual void draw(RenderTarget& target, RenderStates states) const override;
 };

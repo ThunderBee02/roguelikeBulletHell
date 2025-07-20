@@ -2,27 +2,28 @@
 #include "Help.h"
 #include "Projectile.h"
 
-class Weapon : public Drawable
+class Weapon
 {
 protected:
-	float recoveryTime, timeSinceShot;
+	float timeSinceShot = 0.f;
+	float recoveryTime;
 	int damage;
-	vector<Projectile> projectiles;
+	Vector2f localPosition;
+	vector<unique_ptr<Entity>>& projectiles;
 
-	Weapon(float recoveryTime, int damage);
+	Weapon(int damage, float recoveryTime, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles);
 
 public:
-	virtual void update(float deltaTime, Vector2f origin, Vector2f target) = 0;
-
-	virtual void draw(RenderTarget& target, RenderStates states) const override;
+	virtual void update(float deltaTime, Vector2f origin, Angle angle) = 0;
 };
 
-class linearWeapon : public Weapon
+class TargetedWeapon : public Weapon
 {
 private:
 	float projectileSpeed;
+	vector<unique_ptr<Entity>>& targets;
 public:
-	linearWeapon(float recoveryTime, int damage, float projectileSpeed);
+	TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles, vector<unique_ptr<Entity>>& targets);
 
-	virtual void update(float deltaTime, Vector2f origin, Vector2f target) override;
+	virtual void update(float deltaTime, Vector2f origin, Angle angle) override;
 };

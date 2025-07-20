@@ -20,12 +20,12 @@ Gegner Movement und Spawn Patterns:
 
 
 Waffen:
-	offensiv: [update]
-	-untargeted []
-	-targeted []
-	-homing destroyable [Zielposition]
-	-homing dodgeable [Zielposition]
-	-Laser untargeted/targeted []
+	offensiv:
+	-untargeted
+	-targeted
+	-homing destroyable
+	-homing dodgeable
+	-Laser untargeted/targeted
 	-mehr Gegner spawnen 
 	shoot: Spawnpunkt, Zielpunkt
 	update: deltaTime
@@ -49,3 +49,28 @@ Aktuelle Ideen:
 -Waffen spawnen Projektile aber Projektile werden von Game geupdated
 -Waffenupdate benötigt also lediglich Zeit und Position der Schützen, Zielberechnung passiert über Liste möglicher Ziele
 -Kollision?
+
+Probleme:
+-nutze Entity Pointer Vektoren für Spieler und Gegner und caste um an spezielle updates zu kommen oder virtualisiere update
+-template Weapon um Spieler oder Gegner Vektoren zu nehmen -> verschiedene Weapon Klassen die nicht in einen Vektor passen
+
+als nächstes:
+-verschiedene Projektiltypen
+	1.geradeaus fliegend (P/E)
+	2.homing dodgeable
+	3.homing destroyable
+	4.orbiting defensiv
+	5.anti-Projektil Projektil homing oder nicht
+-verschiedene Waffentypen
+	-untargeted
+	-targeted
+	-homing
+	-
+-verschiedene MovementPatterns
+
+
+
+Map Gen Ideen:
+-Vor Spielbeginn auslesen aller Raum-Dateien und erstellen der Room Objekte mit allen Gegnern
+-room.load() zum Laden eines zufällig ausgewählten Raums in das tatsächlich Spiel
+-vorher Laden verbraucht mehr Speicher, aber verhindert Lag Spikes während dem Dateien Lesen

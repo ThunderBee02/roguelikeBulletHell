@@ -1,22 +1,17 @@
 #include "Player.h"
 #include "Game.h"
 
-extern Game game;
+
 
 Player::Player()
 {
-	circle.setPointCount(8);
+	circle.setPointCount(5);
 	circle.setRadius(30.f);
 	circle.setOrigin({ 30.f, 30.f });
 	circle.setPosition({ 600.f, 600.f });
 	circle.setFillColor(Color(32, 74, 158));
 
-	weapons.push_back(make_unique<linearWeapon>(0.2f, 3, 500.f));
-}
-
-Vector2f Player::getCenter() const
-{
-	return circle.getPosition();
+	//weapons.push_back(make_unique<TargetedWeapon>(0.2f, 3, 500.f, game.playerProjectiles, game.enemies));	//turn into directional Weapon
 }
 
 void Player::update(float deltaTime)
@@ -28,17 +23,5 @@ void Player::update(float deltaTime)
 
 	//Weapons
 	for (auto& weapon : weapons)
-	{
-		Vector2f direction(0.f, -1.f);
-		weapon->update(deltaTime, getCenter(), getCenter() + direction);
-	}
-}
-
-void Player::draw(RenderTarget& target, RenderStates states) const
-{
-	for (const auto& weapon : weapons)
-	{
-		target.draw(*weapon, states);
-	}
-	target.draw(circle, states);
+		weapon->update(deltaTime, getCenter(), getRotation());
 }

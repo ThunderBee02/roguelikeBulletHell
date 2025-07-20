@@ -1,20 +1,32 @@
 #pragma once
 #include "Help.h"
+#include "Entity.h"
 
-class Projectile : public Drawable
+class LinearProjectile : public Entity
 {
 private:
-	Texture texture;
-	CircleShape circle;
-
-public:
 	Vector2f direction;
+	float speed;
+public:
+	int damage;
 
-	Projectile(float radius, Vector2f position, Vector2f direction);
+	LinearProjectile(int damage, float speed, Vector2f position, Vector2f direction);
 
-	bool cull() const;
+	virtual void update(float deltaTime) override;
+};
 
-	void move(Vector2f offset);
+class HomingProjectile : public Entity
+{
+private:
+	Vector2f direction;
+	float speed;
+	float maxTurnSpeed;
 
-	virtual void draw(RenderTarget& target, RenderStates states) const override;
+	vector<unique_ptr<Entity>>& targets;
+public:
+	int damage;
+
+	HomingProjectile(int damage, float speed, Vector2f position, vector<unique_ptr<Entity>>& targets);
+
+	virtual void update(float deltaTime) override;
 };

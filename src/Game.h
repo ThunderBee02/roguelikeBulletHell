@@ -8,8 +8,10 @@ class Game : public Drawable
 private:
 	
 public:
-	Player player;
-	vector<Enemy> enemies;
+	static inline vector<unique_ptr<Entity>> players;
+	static inline vector<unique_ptr<Entity>> enemies;
+	static inline vector<unique_ptr<Entity>> playerProjectiles;
+	static inline vector<unique_ptr<Entity>> enemyProjectiles;
 
 	Game();
 

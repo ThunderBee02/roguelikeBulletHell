@@ -17,13 +17,12 @@ static void printFPS(float deltaTime)
     }
 }
 
-Game game;
-
 int main()
 {
     RenderWindow window(VideoMode({1200u, 900u}), "CMake SFML Project");
     //window.setFramerateLimit(30);
     
+    Game game;
     Clock clock;
 
     while (window.isOpen())
@@ -40,6 +39,8 @@ int main()
         }
 
         float deltaTime = clock.restart().asSeconds();
+        if (deltaTime > 0.033)  // for when the window hangs when moved
+            deltaTime = 0.f;
        
         printFPS(deltaTime);
 

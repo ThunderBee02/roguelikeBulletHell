@@ -1,27 +1,17 @@
 #include "Projectile.h"
 
-Projectile::Projectile(float radius, Vector2f position, Vector2f direction)
-	: circle(radius, 8), direction(direction)
+LinearProjectile::LinearProjectile(int damage, float speed, Vector2f position, Vector2f direction)
+	: damage(damage), speed(speed), direction(direction.normalized())
 {
-	circle.setOrigin({ radius, radius });
+	circle.setPointCount(3);
+	circle.setRadius(10.f);
+	circle.setOrigin({ 10.f, 10.f });
 	circle.setPosition(position);
 	circle.setFillColor(Color(255, 0, 0));
+	circle.setRotation(direction.angle()-degrees(30));
 }
 
-bool Projectile::cull() const
+void LinearProjectile::update(float deltaTime)
 {
-	const FloatRect screen({ 0.f, 0.f }, { 1200.f, 900.f });
-	if (screen.contains(circle.getPosition()))
-		return false;
-	return true;
-}
-
-void Projectile::move(Vector2f offset)
-{
-	circle.move(offset);
-}
-
-void Projectile::draw(RenderTarget& target, RenderStates states) const
-{
-	target.draw(circle, states);
+	move(direction * speed * deltaTime, getRotation());
 }
