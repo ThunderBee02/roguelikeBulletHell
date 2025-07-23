@@ -1,32 +1,36 @@
 #pragma once
 #include "Help.h"
 #include "Entity.h"
+#include "Game.h"
 
 class LinearProjectile : public Entity
 {
 private:
 	Vector2f direction;
 	float speed;
+
+	EntityPool& enemyPool;
 public:
-	int damage;
 
-	LinearProjectile(int damage, float speed, Vector2f position, Vector2f direction);
+	LinearProjectile(int damage, float speed, Vector2f spawnPoint, Vector2f direction, EntityPool& enemyPool);
 
-	virtual void update(float deltaTime) override;
+	virtual bool update(float deltaTime) override;
 };
 
 class HomingProjectile : public Entity
 {
 private:
-	Vector2f direction;
+	Angle angle;
 	float speed;
-	float maxTurnSpeed;
+	Angle maxTurn;
 
-	vector<unique_ptr<Entity>>& targets;
+	EntityPool& enemyPool;
+
+	Vector2f getClosest(const vector<unique_ptr<Entity>>& targets) const;
 public:
-	int damage;
+	HomingProjectile(int damage, float speed, Vector2f spawnPoint, Angle maxTurn, EntityPool& enemyPool);
 
-	HomingProjectile(int damage, float speed, Vector2f position, vector<unique_ptr<Entity>>& targets);
+	
 
-	virtual void update(float deltaTime) override;
+	virtual bool update(float deltaTime) override;
 };

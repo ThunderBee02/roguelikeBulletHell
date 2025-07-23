@@ -2,16 +2,14 @@
 #include "Game.h"
 #include <iostream>
 
-
-
-Weapon::Weapon(int damage, float recoveryTime, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles)
-	: damage(damage), recoveryTime(recoveryTime), localPosition(localPosition), projectiles(projectiles)
+Weapon::Weapon(int damage, float recoveryTime, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool)
+	: damage(damage), recoveryTime(recoveryTime), localOffset(localOffset), selfPool(selfPool), enemyPool(enemyPool)
 {
 }
 
 
-TargetedWeapon::TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles, vector<unique_ptr<Entity>>& targets)
-	: Weapon(damage, recoveryTime, localPosition, projectiles), projectileSpeed(projectileSpeed), targets(targets)
+TargetedWeapon::TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool)
+	: Weapon(damage, recoveryTime, localOffset, selfPool, enemyPool), projectileSpeed(projectileSpeed)
 {
 }
 
@@ -20,21 +18,41 @@ void TargetedWeapon::update(float deltaTime, Vector2f origin, Angle angle)
 	timeSinceShot += deltaTime;
 	if (timeSinceShot >= recoveryTime)
 	{
-		timeSinceShot = 0.f;
-		Vector2f position(origin + localPosition.rotatedBy(angle));
+		timeSinceShot -= recoveryTime;
+
+		Vector2f position(origin + localOffset.rotatedBy(angle));
 		Vector2f closestTarget(600.f, -1000.f);
 		float smallestDistance = 10000.f;
-		for (const unique_ptr<Entity>& target : targets)
+		for (const unique_ptr<Entity>& target : enemyPool.characters)
 		{
 			Vector2f targetPosition = target->getCenter();
 			float distance = (targetPosition - position).length();
-			if (distance <= smallestDistance)
+			if (distance < smallestDistance)
 			{
 				closestTarget = targetPosition;
 				smallestDistance = distance;
 			}
 		}
-		projectiles.push_back(make_unique<LinearProjectile>(damage, projectileSpeed, position, closestTarget-position));
+		selfPool.generalProjectiles.push_back(make_unique<LinearProjectile>(damage, projectileSpeed, position, closestTarget-position, enemyPool));
 	}
-	
+}
+
+HomingWeapon::HomingWeapon(int damage, float recoveryTime, float projectileSpeed, bool destroyable, Angle maxTurn, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool)
+	: Weapon(damage, recoveryTime, localOffset, selfPool, enemyPool), projectileSpeed(projectileSpeed), destroyable(destroyable), maxTurn(maxTurn)
+{
+}
+
+void HomingWeapon::update(float deltaTime, Vector2f origin, Angle angle)
+{
+	timeSinceShot += deltaTime;
+	if (timeSinceShot >= recoveryTime)
+	{
+		timeSinceShot -= recoveryTime;
+
+		Vector2f position(origin + localOffset.rotatedBy(angle));
+		if (destroyable)
+			selfPool.destroyableProjectiles.push_back(make_unique<HomingProjectile>(damage, projectileSpeed, position, maxTurn, enemyPool));
+		else
+			selfPool.generalProjectiles.push_back(make_unique<HomingProjectile>(damage, projectileSpeed, position, maxTurn, enemyPool));
+	}
 }

@@ -8,10 +8,12 @@ protected:
 	float timeSinceShot = 0.f;
 	float recoveryTime;
 	int damage;
-	Vector2f localPosition;
-	vector<unique_ptr<Entity>>& projectiles;
 
-	Weapon(int damage, float recoveryTime, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles);
+	Vector2f localOffset;
+	EntityPool& selfPool;
+	EntityPool& enemyPool;
+
+	Weapon(int damage, float recoveryTime, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
 
 public:
 	virtual void update(float deltaTime, Vector2f origin, Angle angle) = 0;
@@ -21,9 +23,20 @@ class TargetedWeapon : public Weapon
 {
 private:
 	float projectileSpeed;
-	vector<unique_ptr<Entity>>& targets;
 public:
-	TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localPosition, vector<unique_ptr<Entity>>& projectiles, vector<unique_ptr<Entity>>& targets);
+	TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
+
+	virtual void update(float deltaTime, Vector2f origin, Angle angle) override;
+};
+
+class HomingWeapon : public Weapon
+{
+private:
+	float projectileSpeed;
+	bool destroyable;
+	Angle maxTurn;
+public:
+	HomingWeapon(int damage, float recoveryTime, float projectileSpeed, bool destroyable, Angle maxTurn, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
 
 	virtual void update(float deltaTime, Vector2f origin, Angle angle) override;
 };

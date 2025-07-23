@@ -10,11 +10,9 @@ private:
 	unique_ptr<MovementPattern> movementPattern;
 	vector<unique_ptr<Weapon>> weapons;
 
-	int health;
-
 public:
 	Enemy(int health, Vector2f spawnPoint, unique_ptr<MovementPattern>& movementPattern, vector<unique_ptr<Weapon>>& weapons);
 
-	void update(float deltaTime);
+	virtual bool update(float deltaTime) override;
 
 };

@@ -11,5 +11,5 @@ private:
 public:
 	Player();
 
-	void update(float deltaTime);
+	virtual bool update(float deltaTime) override;
 };

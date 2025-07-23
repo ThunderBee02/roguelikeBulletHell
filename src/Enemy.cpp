@@ -2,7 +2,7 @@
 #include "Game.h"
 
 Enemy::Enemy(int health, Vector2f spawnPoint, unique_ptr<MovementPattern>& movementPattern, vector<unique_ptr<Weapon>>& weapons)
-	: health(health), movementPattern(std::move(movementPattern)), weapons(std::move(weapons))
+	: Entity(health, 1), movementPattern(std::move(movementPattern)), weapons(std::move(weapons))
 {
 	circle.setPointCount(5);
 	circle.setRadius(100.f);
@@ -10,12 +10,15 @@ Enemy::Enemy(int health, Vector2f spawnPoint, unique_ptr<MovementPattern>& movem
 	circle.setPosition(spawnPoint);
 	circle.setFillColor(Color(128, 0, 0));
 
-	this->weapons.push_back(make_unique<TargetedWeapon>(3, 0.1f, 400.f, Vector2f(100.f,0.f), Game::enemyProjectiles, Game::players));
-	//this->weapons.emplace_back(TargetedWeapon(0.25f, 3, 600.f));
+	hitbox.emplace_back(Vector2f(0.f, 0.f), 100.f);
+	
+	this->weapons.push_back(make_unique<TargetedWeapon>(1, 0.5f, 200.f, Vector2f(100.f, 0.f), Game::enemyEntities, Game::playerEntities));
+	this->weapons.push_back(make_unique<HomingWeapon>(1, 0.6, 300.f, true, degrees(50), Vector2f(0.f, 100.f), Game::enemyEntities, Game::playerEntities));
 }
 
-void Enemy::update(float deltaTime)
+bool Enemy::update(float deltaTime)
 {
 	for (auto& weapon : weapons)
 		weapon->update(deltaTime, getCenter(), getRotation());
+	return doDamage(Game::playerEntities.characters);
 }

@@ -20,7 +20,7 @@ static void printFPS(float deltaTime)
 int main()
 {
     RenderWindow window(VideoMode({1200u, 900u}), "CMake SFML Project");
-    //window.setFramerateLimit(30);
+    //window.setFramerateLimit(100);
     
     Game game;
     Clock clock;

@@ -17,6 +17,11 @@ bool FloatCircle::intersects(Vector2f offset, const FloatCircle& other, Vector2f
 
 
 
+Entity::Entity(int health, int damage)
+	: health(health), damage(damage)
+{
+}
+
 Vector2f Entity::getCenter() const
 {
 	return circle.getPosition();
@@ -27,16 +32,6 @@ Angle Entity::getRotation() const
 	return circle.getRotation();
 }
 
-void Entity::move(Vector2f offset, Angle angle)
-{
-	circle.move(offset);
-	circle.setRotation(angle);
-
-	for (FloatCircle& circle : hitbox)
-	{
-		circle.center = circle.center.rotatedBy(angle);
-	}
-}
 /*void Entity::move(Vector2f offset, Angle angle)	// using global hitbox coordinates
 {
 	for (FloatCircle& hitboxCircle : hitbox)
@@ -58,6 +53,36 @@ bool Entity::isOutside() const
 	return true;
 }
 
+void Entity::move(Vector2f offset, Angle angle)
+{
+	circle.move(offset);
+	circle.setRotation(angle);
+
+	for (FloatCircle& circle : hitbox)
+	{
+		circle.center = circle.center.rotatedBy(angle);
+	}
+}
+
+bool Entity::doDamage(vector<unique_ptr<Entity>>& targets) const
+{
+	for (auto it = targets.begin(); it != targets.end(); ++it)
+	{
+		if (checkCollision(**it))
+		{
+			if ((*it)->takeDamage(damage))
+				targets.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Entity::takeDamage(int damage)
+{
+	health -= damage;
+	return health <= 0;
+}
 bool Entity::checkCollision(const Entity& other) const
 {
 	for (const FloatCircle& circle1 : hitbox)

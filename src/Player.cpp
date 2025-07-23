@@ -4,6 +4,7 @@
 
 
 Player::Player()
+	: Entity(5, 1)
 {
 	circle.setPointCount(5);
 	circle.setRadius(30.f);
@@ -11,10 +12,12 @@ Player::Player()
 	circle.setPosition({ 600.f, 600.f });
 	circle.setFillColor(Color(32, 74, 158));
 
-	//weapons.push_back(make_unique<TargetedWeapon>(0.2f, 3, 500.f, game.playerProjectiles, game.enemies));	//turn into directional Weapon
+	hitbox.emplace_back(Vector2f(0.f, 0.f), 30.f);
+
+	weapons.push_back(make_unique<TargetedWeapon>(1, 0.5f, 400.f, Vector2f(0.f, -50.f), Game::playerEntities, Game::enemyEntities));	//turn into directional Weapon
 }
 
-void Player::update(float deltaTime)
+bool Player::update(float deltaTime)
 {
 	//Movement
 	Vector2f direction((float)(Keyboard::isKeyPressed(Keyboard::Key::D) - Keyboard::isKeyPressed(Keyboard::Key::A)), (float)(Keyboard::isKeyPressed(Keyboard::Key::S) - Keyboard::isKeyPressed(Keyboard::Key::W)));
@@ -24,4 +27,6 @@ void Player::update(float deltaTime)
 	//Weapons
 	for (auto& weapon : weapons)
 		weapon->update(deltaTime, getCenter(), getRotation());
+
+	return 0;
 }
