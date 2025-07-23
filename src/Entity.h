@@ -16,26 +16,28 @@ public:
 class Entity : public Drawable
 {
 protected:
+	int health;
+	int damage;
+
 	Texture texture;
 	CircleShape circle;
 	vector<FloatCircle> hitbox;
 
-public:
-	int health;
-	int damage;
-
 	Entity(int health, int damage);
 
+	bool doDamage(vector<unique_ptr<Entity>>& targets) const;
+
+	virtual bool takeDamage(int damage);
+	virtual bool checkCollision(const Entity& other) const;
+
+public:
 	void move(Vector2f offset, Angle angle);
 
 	Vector2f getCenter() const;
 	Angle getRotation() const;
 	bool isOutside() const;
-	bool doDamage(vector<unique_ptr<Entity>>& targets) const;
 
 	virtual bool update(float deltaTime) = 0;
-	virtual bool takeDamage(int damage);
-	virtual bool checkCollision(const Entity& other) const;
 
 	virtual void draw(RenderTarget& target, RenderStates states) const override;
 };

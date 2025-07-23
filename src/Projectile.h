@@ -10,8 +10,8 @@ private:
 	float speed;
 
 	EntityPool& enemyPool;
-public:
 
+public:
 	LinearProjectile(int damage, float speed, Vector2f spawnPoint, Vector2f direction, EntityPool& enemyPool);
 
 	virtual bool update(float deltaTime) override;
@@ -27,10 +27,9 @@ private:
 	EntityPool& enemyPool;
 
 	Vector2f getClosest(const vector<unique_ptr<Entity>>& targets) const;
+
 public:
 	HomingProjectile(int damage, float speed, Vector2f spawnPoint, Angle maxTurn, EntityPool& enemyPool);
-
-	
 
 	virtual bool update(float deltaTime) override;
 };

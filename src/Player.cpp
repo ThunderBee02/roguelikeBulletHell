@@ -1,8 +1,6 @@
 #include "Player.h"
 #include "Game.h"
 
-
-
 Player::Player()
 	: Entity(5, 1)
 {

@@ -23,6 +23,7 @@ class TargetedWeapon : public Weapon
 {
 private:
 	float projectileSpeed;
+
 public:
 	TargetedWeapon(int damage, float recoveryTime, float projectileSpeed, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
 
@@ -35,6 +36,7 @@ private:
 	float projectileSpeed;
 	bool destroyable;
 	Angle maxTurn;
+
 public:
 	HomingWeapon(int damage, float recoveryTime, float projectileSpeed, bool destroyable, Angle maxTurn, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
 

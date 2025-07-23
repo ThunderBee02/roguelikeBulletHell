@@ -32,19 +32,6 @@ Angle Entity::getRotation() const
 	return circle.getRotation();
 }
 
-/*void Entity::move(Vector2f offset, Angle angle)	// using global hitbox coordinates
-{
-	for (FloatCircle& hitboxCircle : hitbox)
-	{
-		Vector2f local = hitboxCircle.center - getCenter();
-		local = local.rotatedBy(angle);
-		hitboxCircle.center = local + getCenter() + offset;
-	}
-
-	circle.move(offset);
-	circle.setRotation(angle);
-}*/
-
 bool Entity::isOutside() const
 {
 	const FloatRect screen({ 0.f, 0.f }, { 1200.f, 900.f });
@@ -63,6 +50,18 @@ void Entity::move(Vector2f offset, Angle angle)
 		circle.center = circle.center.rotatedBy(angle);
 	}
 }
+/*void Entity::move(Vector2f offset, Angle angle)	// using global hitbox coordinates
+{
+	for (FloatCircle& hitboxCircle : hitbox)
+	{
+		Vector2f local = hitboxCircle.center - getCenter();
+		local = local.rotatedBy(angle);
+		hitboxCircle.center = local + getCenter() + offset;
+	}
+
+	circle.move(offset);
+	circle.setRotation(angle);
+}*/
 
 bool Entity::doDamage(vector<unique_ptr<Entity>>& targets) const
 {

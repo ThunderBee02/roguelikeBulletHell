@@ -1,44 +1,6 @@
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
-#include <iostream>
-
-void EntityPool::update(float deltaTime)
-{
-	/*for (auto entityVector : all)
-		for (unique_ptr<Entity>& entity : *entityVector)
-			entity->update(deltaTime);*/
-	for (auto entityVector : all)
-	{
-		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
-			[&](unique_ptr<Entity>& projectile) {
-				return projectile->update(deltaTime);
-			}), entityVector->end());
-	}
-}
-
-void EntityPool::cullProjectiles()
-{
-	for (auto entityVector : all)
-	{
-		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
-			[](unique_ptr<Entity>& projectile) {
-				return projectile->isOutside();
-			}), entityVector->end());
-	}
-}
-
-void EntityPool::draw(RenderTarget& target, RenderStates& states) const
-{
-	for (const unique_ptr<Entity>& self : characters)
-		target.draw(*self, states);
-	for (const unique_ptr<Entity>& projectile : generalProjectiles)
-		target.draw(*projectile, states);
-	for (const unique_ptr<Entity>& projectile : destroyableProjectiles)
-		target.draw(*projectile, states);
-}
-
-/*****************************************************************************************************************/
 
 Game::Game()
 {
@@ -51,15 +13,36 @@ Game::Game()
 
 void Game::update(float deltaTime)
 {
-	playerEntities.update(deltaTime);
-	enemyEntities.update(deltaTime);
+	for (auto entityVector : playerEntities.all)
+		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
+			[&](unique_ptr<Entity>& projectile) {
+				return projectile->update(deltaTime);
+			}), entityVector->end());
+	for (auto entityVector : enemyEntities.all)
+		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
+			[&](unique_ptr<Entity>& projectile) {
+				return projectile->update(deltaTime);
+			}), entityVector->end());
 
-	playerEntities.cullProjectiles();
-	enemyEntities.cullProjectiles();
+	// Culling
+	for (auto entityVector : playerEntities.all)
+		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
+			[](unique_ptr<Entity>& projectile) {
+				return projectile->isOutside();
+			}), entityVector->end());
+	for (auto entityVector : enemyEntities.all)
+		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
+			[](unique_ptr<Entity>& projectile) {
+				return projectile->isOutside();
+			}), entityVector->end());
 }
 
 void Game::draw(RenderTarget& target, RenderStates states) const
 {
-	playerEntities.draw(target, states);
-	enemyEntities.draw(target, states);
+	for (vector<unique_ptr<Entity>>* entityVector : playerEntities.all)
+		for (const unique_ptr<Entity>& entity : *entityVector)
+			target.draw(*entity, states);
+	for (vector<unique_ptr<Entity>>* entityVector : enemyEntities.all)
+		for (const unique_ptr<Entity>& entity : *entityVector)
+			target.draw(*entity, states);
 }
