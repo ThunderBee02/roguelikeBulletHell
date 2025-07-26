@@ -18,11 +18,11 @@ bool LinearProjectile::update(float deltaTime)
 {
 	move(direction * speed * deltaTime, getRotation());
 
-	return doDamage(enemyPool.characters) || doDamage(enemyPool.destroyableProjectiles);
+	return doDamage(enemyPool.characters) || doDamage(enemyPool.destroyableProjectiles) || isOutside();
 }
 
-HomingProjectile::HomingProjectile(int damage, float speed, Vector2f position, Angle maxTurn, EntityPool& enemyPool)
-	: Entity(1, damage), speed(speed), maxTurn(maxTurn), enemyPool(enemyPool)
+HomingProjectile::HomingProjectile(int health, int damage, float speed, Vector2f position, Angle maxTurn, EntityPool& enemyPool)
+	: Entity(health, damage), speed(speed), maxTurn(maxTurn), enemyPool(enemyPool)
 {
 	circle.setPointCount(3);
 	circle.setRadius(10.f);
@@ -34,6 +34,11 @@ HomingProjectile::HomingProjectile(int damage, float speed, Vector2f position, A
 	circle.setRotation(angle - degrees(30));
 
 	hitbox.emplace_back(Vector2f(0.f, 0.f), 10.f);
+}
+
+HomingProjectile::HomingProjectile(int damage, float speed, Vector2f spawnPoint, Angle maxTurn, EntityPool& enemyPool)
+	: HomingProjectile(1, damage, speed, spawnPoint, maxTurn, enemyPool)
+{
 }
 
 Vector2f HomingProjectile::getClosest(const vector<unique_ptr<Entity>>& targets) const
@@ -64,5 +69,5 @@ bool HomingProjectile::update(float deltaTime)
 	Vector2f unitVector(1.f, 0.f);
 	move(unitVector.rotatedBy(angle) * speed * deltaTime, angle - degrees(30));
 
-	return doDamage(enemyPool.characters);
+	return doDamage(enemyPool.characters) || isOutside();
 }

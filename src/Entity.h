@@ -26,6 +26,7 @@ protected:
 	Entity(int health, int damage);
 
 	bool doDamage(vector<unique_ptr<Entity>>& targets) const;
+	bool isOutside() const;
 
 	virtual bool takeDamage(int damage);
 	virtual bool checkCollision(const Entity& other) const;
@@ -35,7 +36,6 @@ public:
 
 	Vector2f getCenter() const;
 	Angle getRotation() const;
-	bool isOutside() const;
 
 	virtual bool update(float deltaTime) = 0;
 

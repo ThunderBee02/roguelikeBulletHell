@@ -35,10 +35,12 @@ class HomingWeapon : public Weapon
 private:
 	float projectileSpeed;
 	bool destroyable;
+	int projectileHealth;
 	Angle maxTurn;
 
 public:
-	HomingWeapon(int damage, float recoveryTime, float projectileSpeed, bool destroyable, Angle maxTurn, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
+	HomingWeapon(int damage, float recoveryTime, float projectileSpeed, bool destroyable, int projectileHealth, Angle maxTurn, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
+	HomingWeapon(int damage, float recoveryTime, float projectileSpeed, Angle maxTurn, Vector2f localOffset, EntityPool& selfPool, EntityPool& enemyPool);
 
 	virtual void update(float deltaTime, Vector2f origin, Angle angle) override;
 };

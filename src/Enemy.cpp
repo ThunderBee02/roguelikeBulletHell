@@ -13,7 +13,7 @@ Enemy::Enemy(int health, Vector2f spawnPoint, unique_ptr<MovementPattern>& movem
 	hitbox.emplace_back(Vector2f(0.f, 0.f), 100.f);
 	
 	this->weapons.push_back(make_unique<TargetedWeapon>(1, 0.5f, 200.f, Vector2f(100.f, 0.f), Game::enemyEntities, Game::playerEntities));
-	this->weapons.push_back(make_unique<HomingWeapon>(1, 0.6f, 300.f, true, degrees(50), Vector2f(0.f, 100.f), Game::enemyEntities, Game::playerEntities));
+	this->weapons.push_back(make_unique<HomingWeapon>(1, 0.6f, 300.f, true, 2, degrees(50), Vector2f(0.f, 100.f), Game::enemyEntities, Game::playerEntities));
 }
 
 bool Enemy::update(float deltaTime)

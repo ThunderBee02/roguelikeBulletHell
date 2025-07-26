@@ -78,3 +78,20 @@ Map Gen Ideen:
 
 Schild Ideen:
 -entweder hitbox swappen oder in doDamage() checkCollision() von der anderen Seite ausführen und checkCollision() für den Spieler überschreiben
+-mehrere Schilder möglich, Reihenfolge durch Größe bestimmt
+
+als nächstes:
+-zweiter Konstruktor für HomingProjectile
+-Untargeted Weapon
+-Laser, Shield oder MovementPattern
+
+
+007 Ideen:
+-Dash Fähigkeit
+-Irgendwie Pfadauswahl um Gegnertypen zu bestimmen und Build darauf anpassen zu können (vielleicht mit unseren Biomen kombinieren)
+-Boni für besonders schnelle oder schadenlose Raum Completion
+-Passives
+-Builds müssen synergieren können
+-Begleiter spawnen können
+-Gegner die in viele Richtungen schießen doch möglich, indem man ihn im Spielerbereich platziert oder die Kugeln eine feste Kurve fliegen
+-Collectibles zum einsammeln, vielleicht zerstörbare Truhen

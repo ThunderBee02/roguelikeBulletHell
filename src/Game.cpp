@@ -15,25 +15,13 @@ void Game::update(float deltaTime)
 {
 	for (auto entityVector : playerEntities.all)
 		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
-			[&](unique_ptr<Entity>& projectile) {
-				return projectile->update(deltaTime);
+			[&](unique_ptr<Entity>& entity) {
+				return entity->update(deltaTime);
 			}), entityVector->end());
 	for (auto entityVector : enemyEntities.all)
 		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
-			[&](unique_ptr<Entity>& projectile) {
-				return projectile->update(deltaTime);
-			}), entityVector->end());
-
-	// Culling
-	for (auto entityVector : playerEntities.all)
-		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
-			[](unique_ptr<Entity>& projectile) {
-				return projectile->isOutside();
-			}), entityVector->end());
-	for (auto entityVector : enemyEntities.all)
-		entityVector->erase(remove_if(entityVector->begin(), entityVector->end(),
-			[](unique_ptr<Entity>& projectile) {
-				return projectile->isOutside();
+			[&](unique_ptr<Entity>& entity) {
+				return entity->update(deltaTime);
 			}), entityVector->end());
 }
 

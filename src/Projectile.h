@@ -29,6 +29,7 @@ private:
 	Vector2f getClosest(const vector<unique_ptr<Entity>>& targets) const;
 
 public:
+	HomingProjectile(int health, int damage, float speed, Vector2f spawnPoint, Angle maxTurn, EntityPool& enemyPool);
 	HomingProjectile(int damage, float speed, Vector2f spawnPoint, Angle maxTurn, EntityPool& enemyPool);
 
 	virtual bool update(float deltaTime) override;
